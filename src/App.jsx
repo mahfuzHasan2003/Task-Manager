@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
-
+import NavBar from "@/components/my-components/nav-bar";
 function App() {
   return (
-    <>
-      <Button>Click me!! </Button>
-    </>
+    <div className="w-full max-w-7xl mx-auto">
+      <NavBar />
+    </div>
   );
 }
 
