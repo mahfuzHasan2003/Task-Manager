@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Toaster } from "react-hot-toast";
 import "./index.css";
 import App from "./App.jsx";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { Toaster } from "react-hot-toast";
 import AuthProvider from "@/providers/auth-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
