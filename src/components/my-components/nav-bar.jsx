@@ -1,5 +1,4 @@
 import useAuth from "@/hooks/use-auth";
-
 import UserAvatar from "@/components/my-components/user-avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
