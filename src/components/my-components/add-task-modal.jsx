@@ -28,6 +28,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
     e.preventDefault();
     onAddTask(newTask);
     setNewTask({ title: "", description: "", status: "todo" });
+    onClose();
   };
 
   return (

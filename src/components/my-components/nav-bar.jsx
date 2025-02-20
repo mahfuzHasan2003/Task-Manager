@@ -6,31 +6,26 @@ import { FaGoogle } from "react-icons/fa";
 import ThemeSwitcher from "@/components/my-components/theme-switcher";
 
 const NavBar = () => {
-  const { googleSignIn, user, authLoading, logout } = useAuth();
+  const { googleSignIn, user, logout } = useAuth();
 
   return (
     <nav className="flex items-center justify-between py-5">
-      {/* left side */}
-      {/* brand logo */}
       <span className="cursor-pointer font-bold text-xl md:text-2xl">
         <span className="text-primary">Task</span>Manager
       </span>
 
-      {/* right side */}
       <div className="inline-flex items-center gap-2 md:gap-5">
-        {/* theme switcher */}
         <ThemeSwitcher />
-        {/* user profile and login logout btn */}
-        {user && user?.email ? (
+        {user ? (
           <span className="inline-flex items-center gap-2 md:gap-5">
             <UserAvatar />
             <Button variant="destructive" onClick={logout}>
-              <LogOut /> Log Out
+              <LogOut className="mr-2 h-4 w-4" /> Log Out
             </Button>
           </span>
         ) : (
           <Button onClick={googleSignIn}>
-            <FaGoogle /> Log In
+            <FaGoogle className="mr-2 h-4 w-4" /> Log In
           </Button>
         )}
       </div>
