@@ -1,13 +1,16 @@
 import { ClipboardList } from "lucide-react";
 import "@/components/my-components/specific-scroll-color.css";
 import useGetTasks from "@/hooks/use-get-tasks";
-import { SortableContext } from "@dnd-kit/sortable";
 import SingleTask from "./single-task";
+import { useDroppable } from "@dnd-kit/core";
 
-const ToDoTasks = () => {
-  const { data = {}, isLoading } = useGetTasks(["todoTasks"], "todo");
-  const { success, userTasks = [] } = data;
-  // console.log(userTasks);
+const ToDoTasks = ({ tasks }) => {
+  // const { data = {}, isLoading } = useGetTasks(["todoTasks"], "todo");
+  // const { success, userTasks = [] } = data;
+
+  const { setNodeRef } = useDroppable({
+    id: "todo",
+  });
 
   return (
     <div
@@ -19,9 +22,11 @@ const ToDoTasks = () => {
           <ClipboardList /> To-Do
         </span>
       </h4>
-      <div className="p-5 space-y-3">
-        {userTasks &&
-          userTasks?.map((task) => <SingleTask key={task?._id} task={task} />)}
+
+      <div className="p-5 space-y-3" ref={setNodeRef}>
+        {tasks?.map((task) => (
+          <SingleTask key={task._id} task={task} />
+        ))}
       </div>
     </div>
   );

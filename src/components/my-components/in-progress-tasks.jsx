@@ -1,15 +1,19 @@
 import { FaHourglassHalf } from "react-icons/fa";
 import "@/components/my-components/specific-scroll-color.css";
-import { SortableContext } from "@dnd-kit/sortable";
 import useGetTasks from "@/hooks/use-get-tasks";
 import SingleTask from "./single-task";
+import { useDroppable } from "@dnd-kit/core";
 
-const InProgressTasks = () => {
-  const { data = {}, isLoading } = useGetTasks(
-    ["inProgressTasks"],
-    "in-progress"
-  );
-  const { success, userTasks = [] } = data;
+const InProgressTasks = ({ tasks }) => {
+  // const { data = {}, isLoading } = useGetTasks(
+  //   ["inProgressTasks"],
+  //   "in-progress"
+  // );
+  // const { success, userTasks = [] } = data;
+
+  const { setNodeRef } = useDroppable({
+    id: "in-progress",
+  });
   return (
     <div
       className="lg:flex-1 bg-yellow-500/40 rounded-md overflow-y-auto"
@@ -20,12 +24,11 @@ const InProgressTasks = () => {
           <FaHourglassHalf /> In Progress..
         </span>
       </h4>
-      {/* <SortableContext> */}
-      <div className="p-5 space-y-3">
-        {userTasks &&
-          userTasks?.map((task) => <SingleTask key={task?._id} task={task} />)}
+      <div className="p-5 space-y-3" ref={setNodeRef}>
+        {tasks.map((task) => (
+          <SingleTask key={task._id} task={task} />
+        ))}
       </div>
-      {/* </SortableContext> */}
     </div>
   );
 };

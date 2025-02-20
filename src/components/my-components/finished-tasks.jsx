@@ -2,10 +2,15 @@ import { LucideCheckCheck } from "lucide-react";
 import "@/components/my-components/specific-scroll-color.css";
 import SingleTask from "./single-task";
 import useGetTasks from "@/hooks/use-get-tasks";
+import { useDroppable } from "@dnd-kit/core";
 
-const FinishedTasks = () => {
-  const { data = {}, isLoading } = useGetTasks(["finishedTasks"], "finished");
-  const { success, userTasks = [] } = data;
+const FinishedTasks = ({ tasks }) => {
+  // const { data = {}, isLoading } = useGetTasks(["finishedTasks"], "finished");
+  // const { success, userTasks = [] } = data;
+
+  const { setNodeRef } = useDroppable({
+    id: "finished",
+  });
   return (
     <div
       className="lg:flex-1 bg-green-500/10 rounded-md overflow-y-auto"
@@ -16,9 +21,10 @@ const FinishedTasks = () => {
           <LucideCheckCheck /> Finished
         </span>
       </h4>
-      <div className="p-5 space-y-3">
-        {userTasks &&
-          userTasks?.map((task) => <SingleTask key={task?._id} task={task} />)}
+      <div className="p-5 space-y-3" ref={setNodeRef}>
+        {tasks.map((task) => (
+          <SingleTask key={task._id} task={task} />
+        ))}
       </div>
     </div>
   );

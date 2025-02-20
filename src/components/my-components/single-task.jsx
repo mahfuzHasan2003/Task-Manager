@@ -1,19 +1,33 @@
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useDraggable } from "@dnd-kit/core";
 import moment from "moment";
 
 const SingleTask = ({ task }) => {
-  const { title, description, timestamp, status } = task;
+  const { title, description, timestamp, status, _id } = task;
+
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: _id,
+    data: { status },
+  });
+  const style = transform
+    ? { transform: `translate(${transform.x}px, ${transform.y}px)` }
+    : undefined;
   return (
-    <Card>
+    <Card
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={style}
+      className="cursor-pointer z-50"
+    >
       <CardHeader>
-        <CardTitle className="">
+        <CardTitle>
           {title.length > 25 ? `${title.slice(0, 25)}...` : title}
         </CardTitle>
         <CardDescription>
