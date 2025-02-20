@@ -1,7 +1,11 @@
 import { LucideCheckCheck } from "lucide-react";
 import "@/components/my-components/specific-scroll-color.css";
+import SingleTask from "./single-task";
+import useGetTasks from "@/hooks/use-get-tasks";
 
 const FinishedTasks = () => {
+  const { data = {}, isLoading } = useGetTasks(["finishedTasks"], "finished");
+  const { success, userTasks = [] } = data;
   return (
     <div
       className="lg:flex-1 bg-green-500/10 rounded-md overflow-y-auto"
@@ -12,7 +16,10 @@ const FinishedTasks = () => {
           <LucideCheckCheck /> Finished
         </span>
       </h4>
-      <p className="p-5"></p>
+      <div className="p-5 space-y-3">
+        {userTasks &&
+          userTasks?.map((task) => <SingleTask key={task?._id} task={task} />)}
+      </div>
     </div>
   );
 };
