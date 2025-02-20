@@ -1,0 +1,10 @@
+#to-do::-webkit-scrollbar-thumb {
+  background-color: var(--color-blue-900);
+}
+#in-progress::-webkit-scrollbar-thumb {
+  background-color: var(--color-yellow-900);
+}
+
+#finished::-webkit-scrollbar-thumb {
+  background-color: var(--color-green-900);
+}

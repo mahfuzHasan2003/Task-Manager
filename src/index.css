@@ -30,6 +30,7 @@
   --chart-3: hsl(197 37% 24%);
   --chart-4: hsl(43 74% 66%);
   --chart-5: hsl(27 87% 67%);
+  scroll-behavior: smooth;
 }
 
 .dark {
@@ -98,3 +99,17 @@
     @apply bg-background text-foreground;
   }
 }
+/* START: Designing the scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-track {
+  background-color: var(--muted);
+  border-radius: 2px;
+}
+/* END: Designing the scrollbar */

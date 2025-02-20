@@ -1,4 +1,5 @@
 import { auth } from "@/firebase/firebase.init";
+import useAxios from "@/hooks/use-axios";
 import {
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -13,11 +14,11 @@ export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
+  const axios = useAxios();
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        // TODO: add user to DB
       } else {
         setUser(null);
       }
@@ -31,10 +32,14 @@ const AuthProvider = ({ children }) => {
   const googleSignIn = async () => {
     setAuthLoading(true);
     try {
-      await signInWithPopup(auth, provider);
+      const {
+        user: { email, photoURL, displayName },
+      } = await signInWithPopup(auth, provider);
       toast.success("You have successfully logged in.");
+      // adding user info to DB
+      await axios.post("/user", { email, photoURL, displayName });
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
