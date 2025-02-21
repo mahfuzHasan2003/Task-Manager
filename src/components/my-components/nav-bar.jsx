@@ -24,7 +24,7 @@ const NavBar = () => {
             </Button>
           </span>
         ) : (
-          <Button onClick={googleSignIn}>
+          <Button onClick={googleSignIn} variant="secondary">
             <FaGoogle className="mr-2 h-4 w-4" /> Log In
           </Button>
         )}

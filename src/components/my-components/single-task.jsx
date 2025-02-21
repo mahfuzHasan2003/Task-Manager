@@ -13,16 +13,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import moment from "moment";
-import { Pencil, Trash2, Save, X } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  Save,
+  X,
+  ArrowRight,
+  ArrowRightToLine,
+} from "lucide-react";
 import socket from "@/socket";
 import useAuth from "@/hooks/use-auth";
 
-const SingleTask = ({ task, isDragging }) => {
-  const [isEditing, setIsEditing] = useState(false);
+const SingleTask = ({
+  task,
+  isDragging,
+  isEditing,
+  editingTaskId,
+  setEditingTaskId,
+}) => {
   const [editedTask, setEditedTask] = useState(task);
   const { title, description, timestamp, status, _id } = task;
   const { user } = useAuth();
-
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: _id,
@@ -35,23 +46,9 @@ const SingleTask = ({ task, isDragging }) => {
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const handleEdit = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsEditing(true);
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleSave = () => {
     socket.emit("updateTask", { ...editedTask, email: user.email });
-    setIsEditing(false);
-  };
-
-  const handleDelete = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    socket.emit("deleteTask", { taskId: _id, email: user.email });
+    setEditingTaskId(null);
   };
 
   const handleInputChange = (e, field) => {
@@ -80,13 +77,7 @@ const SingleTask = ({ task, isDragging }) => {
           <Button onClick={handleSave}>
             <Save className="mr-2 h-4 w-4" /> Save
           </Button>
-          <Button
-            variant="outline"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsEditing(false);
-            }}
-          >
+          <Button variant="outline" onClick={() => setEditingTaskId(null)}>
             <X className="mr-2 h-4 w-4" /> Cancel
           </Button>
         </CardFooter>
@@ -97,26 +88,63 @@ const SingleTask = ({ task, isDragging }) => {
   return (
     <Card
       ref={setNodeRef}
-      {...listeners}
-      {...attributes}
       style={style}
-      className="cursor-move"
+      className="cursor-move relative pr-12 min-h-38"
     >
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent className="text-xs text-right block text-muted-foreground">
-        {moment(timestamp).format("D MMM YYYY — h:mmA")}
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline" size="icon" onClick={handleEdit}>
+      {/* card contents */}
+      <div {...listeners} {...attributes}>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardFooter className="text-xs text-muted-foreground">
+          {moment(timestamp).format("D MMM YYYY — h:mmA")}
+        </CardFooter>
+      </div>
+      {/* controls for task */}
+      <div className="flex flex-col gap-1 p-1 absolute right-0 top-0">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setEditingTaskId(_id)}
+        >
           <Pencil className="h-4 w-4" />
         </Button>
-        <Button variant="destructive" size="icon" onClick={handleDelete}>
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => {
+            socket.emit("deleteTask", {
+              taskId: _id,
+              email: user.email,
+            });
+          }}
+        >
           <Trash2 className="h-4 w-4" />
         </Button>
-      </CardFooter>
+        {status !== "finished" && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              //
+            }}
+          >
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        )}
+        {status === "todo" && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              //
+            }}
+          >
+            <ArrowRightToLine className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
     </Card>
   );
 };

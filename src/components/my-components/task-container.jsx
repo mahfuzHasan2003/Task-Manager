@@ -95,7 +95,7 @@ const TaskContainer = () => {
     //  const activeStatus = findTaskContainer(activeId);
     const activeStatus = activeTask.status;
     const overStatus = findTaskContainer(overId) || over.id;
-    console.log(activeStatus);
+    // console.log(activeStatus);
 
     if (activeStatus !== overStatus) {
       socket.emit("updateTaskStatus", {
@@ -134,7 +134,7 @@ const TaskContainer = () => {
   };
 
   return (
-    <main className="overflow-hidden flex-1 p-3 mb-2 rounded-md h-full lg:flex flex-col">
+    <main className="overflow-hidden flex-1 p-3 rounded-md h-full lg:flex flex-col mt-10 mb-5">
       <div className="flex justify-between items-center mb-5">
         <h1 className="font-bold text-3xl lg:text-4xl">Manage your tasks</h1>
         <Button onClick={() => setIsAddModalOpen(true)}>
@@ -142,21 +142,21 @@ const TaskContainer = () => {
         </Button>
       </div>
       {user?.email ? (
-        <div className="lg:flex-1 lg:flex gap-5 overflow-hidden h-full mt-10">
-          <DndContext
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-            collisionDetection={closestCorners}
-          >
+        <DndContext
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+          collisionDetection={closestCorners}
+        >
+          <div className="lg:flex-1 lg:flex gap-5 overflow-hidden h-full">
             <ToDoTasks tasks={tasks.todo} />
             <InProgressTasks tasks={tasks["in-progress"]} />
             <FinishedTasks tasks={tasks.finished} />
             <DragOverlay>
               {activeTask ? <SingleTask task={activeTask} isDragging /> : null}
             </DragOverlay>
-          </DndContext>
-        </div>
+          </div>
+        </DndContext>
       ) : (
         <p className="text-red-500 text-center mt-10 font-bold">
           Please login to use the app and save your data
