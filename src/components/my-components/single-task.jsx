@@ -45,15 +45,34 @@ const SingleTask = ({
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
-
+  // save task edited data
   const handleSave = () => {
     socket.emit("updateTask", { ...editedTask, email: user.email });
     setEditingTaskId(null);
   };
 
+  // instantly set the input value of the editing task
   const handleInputChange = (e, field) => {
-    e.stopPropagation();
     setEditedTask({ ...editedTask, [field]: e.target.value });
+  };
+
+  // change status by btn clicking
+  const changeStatusByButton = () => {
+    setEditedTask((prev) => {
+      const newStatus = prev.status === "todo" ? "in-progress" : "finished";
+      const updatedTask = { ...prev, status: newStatus };
+      socket.emit("updateTask", { ...updatedTask, email: user.email });
+      return updatedTask;
+    });
+  };
+
+  // change status from todo to finished
+  const changeTodoToFinished = () => {
+    setEditedTask((prev) => {
+      const updatedTask = { ...prev, status: "finished" };
+      socket.emit("updateTask", { ...updatedTask, email: user.email });
+      return updatedTask;
+    });
   };
 
   if (isEditing) {
@@ -63,14 +82,12 @@ const SingleTask = ({
           <Input
             value={editedTask.title}
             onChange={(e) => handleInputChange(e, "title")}
-            onClick={(e) => e.stopPropagation()}
           />
         </CardHeader>
         <CardContent>
           <Textarea
             value={editedTask.description}
             onChange={(e) => handleInputChange(e, "description")}
-            onClick={(e) => e.stopPropagation()}
           />
         </CardContent>
         <CardFooter className="flex justify-between">
@@ -91,7 +108,7 @@ const SingleTask = ({
       style={style}
       className="cursor-move relative pr-12 min-h-38"
     >
-      {/* card contents */}
+      {/* card contents and sortable area */}
       <div {...listeners} {...attributes}>
         <CardHeader>
           <CardTitle>{title}</CardTitle>
@@ -103,6 +120,7 @@ const SingleTask = ({
       </div>
       {/* controls for task */}
       <div className="flex flex-col gap-1 p-1 absolute right-0 top-0">
+        {/* edit button */}
         <Button
           variant="outline"
           size="sm"
@@ -110,6 +128,7 @@ const SingleTask = ({
         >
           <Pencil className="h-4 w-4" />
         </Button>
+        {/* delete button */}
         <Button
           variant="destructive"
           size="sm"
@@ -122,25 +141,15 @@ const SingleTask = ({
         >
           <Trash2 className="h-4 w-4" />
         </Button>
+        {/* change status by btn clicking */}
         {status !== "finished" && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              //
-            }}
-          >
+          <Button variant="outline" size="sm" onClick={changeStatusByButton}>
             <ArrowRight className="h-4 w-4" />
           </Button>
         )}
+        {/* by clicking the button change task status form todo to finished  */}
         {status === "todo" && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              //
-            }}
-          >
+          <Button variant="outline" size="sm" onClick={changeTodoToFinished}>
             <ArrowRightToLine className="h-4 w-4" />
           </Button>
         )}

@@ -11,7 +11,7 @@ import { PlusCircle } from "lucide-react";
 import AddTaskModal from "./add-task-modal";
 import SingleTask from "./single-task";
 
-const TaskContainer = () => {
+const TasksContainer = () => {
   const { user } = useAuth();
   const [tasks, setTasks] = useState({
     todo: [],
@@ -171,4 +171,4 @@ const TaskContainer = () => {
   );
 };
 
-export default TaskContainer;
+export default TasksContainer;
