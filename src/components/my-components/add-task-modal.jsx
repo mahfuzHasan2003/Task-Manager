@@ -41,6 +41,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
           <div className="grid gap-4 py-4">
             <Input
               id="title"
+              maxLength={50}
               placeholder="Task Title"
               value={newTask.title}
               onChange={(e) =>
@@ -50,6 +51,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
             />
             <Textarea
               id="description"
+              maxLength={200}
               placeholder="Task Description"
               value={newTask.description}
               onChange={(e) =>

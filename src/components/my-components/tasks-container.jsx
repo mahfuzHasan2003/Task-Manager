@@ -150,7 +150,7 @@ const TasksContainer = () => {
             onDragEnd={handleDragEnd}
             collisionDetection={closestCorners}
           >
-            <div className="lg:flex-1 lg:flex gap-5 overflow-hidden h-full">
+            <div className="lg:flex-1 lg:flex gap-5 overflow-hidden h-full space-y-10 lg:space-y-0 *:min-h-150">
               <ToDoTasks tasks={tasks.todo} />
               <InProgressTasks tasks={tasks["in-progress"]} />
               <FinishedTasks tasks={tasks.finished} />

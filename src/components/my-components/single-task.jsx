@@ -20,12 +20,14 @@ import {
   X,
   ArrowRight,
   ArrowRightToLine,
+  LoaderIcon,
 } from "lucide-react";
 import socket from "@/socket";
 import useAuth from "@/hooks/use-auth";
 
 const SingleTask = ({ task, isDragging, isEditing, setEditingTaskId }) => {
   const [editedTask, setEditedTask] = useState(task);
+  const [deletingTask, setDeletingTask] = useState(false);
   const { title, description, timestamp, status, _id } = task;
   const { user } = useAuth();
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -63,11 +65,13 @@ const SingleTask = ({ task, isDragging, isEditing, setEditingTaskId }) => {
 
   // change status from todo to finished
   const changeTodoToFinished = () => {
+    setMoveTaskLast(true);
     setEditedTask((prev) => {
       const updatedTask = { ...prev, status: "finished" };
       socket.emit("updateTask", { ...updatedTask, email: user.email });
       return updatedTask;
     });
+    setMoveTaskLast(false);
   };
 
   if (isEditing) {
@@ -101,7 +105,7 @@ const SingleTask = ({ task, isDragging, isEditing, setEditingTaskId }) => {
     <Card
       ref={setNodeRef}
       style={style}
-      className="cursor-move relative pr-12 min-h-38"
+      className="cursor-move relative pr-12 min-h-38 group overflow-hidden"
     >
       {/* card contents and sortable area */}
       <div {...listeners} {...attributes}>
@@ -114,7 +118,7 @@ const SingleTask = ({ task, isDragging, isEditing, setEditingTaskId }) => {
         </CardFooter>
       </div>
       {/* controls for task */}
-      <div className="flex flex-col gap-1 p-1 absolute right-0 top-0">
+      <div className="flex flex-col gap-1 p-1 absolute right-0 lg:-right-20 top-0 group-hover:right-0 transition-all duration-300">
         {/* edit button */}
         <Button
           variant="outline"
@@ -127,19 +131,25 @@ const SingleTask = ({ task, isDragging, isEditing, setEditingTaskId }) => {
         <Button
           variant="destructive"
           size="sm"
+          disabled={deletingTask}
           onClick={() => {
+            setDeletingTask(true);
             socket.emit("deleteTask", {
               taskId: _id,
               email: user.email,
             });
           }}
         >
-          <Trash2 className="h-4 w-4" />
+          {deletingTask ? (
+            <LoaderIcon className="h-4 w-4 animate-spin" />
+          ) : (
+            <Trash2 className="h-4 w-4" />
+          )}
         </Button>
         {/* change status by btn clicking */}
         {status !== "finished" && (
           <Button variant="outline" size="sm" onClick={changeStatusByButton}>
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4 hover:text-primary" />
           </Button>
         )}
         {/* by clicking the button change task status form todo to finished  */}
