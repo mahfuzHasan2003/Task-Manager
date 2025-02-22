@@ -35,10 +35,12 @@ const AuthProvider = ({ children }) => {
       const {
         user: { email, photoURL, displayName },
       } = await signInWithPopup(auth, provider);
-      toast.success("You have successfully logged in.");
       // adding user info to DB
       await axios.post("/user", { email, photoURL, displayName });
+      toast.success("You have successfully logged in.");
     } catch (error) {
+      console.log(error);
+
       toast.error(error.response?.data?.message || error.message);
     }
   };

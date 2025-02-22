@@ -24,13 +24,7 @@ import {
 import socket from "@/socket";
 import useAuth from "@/hooks/use-auth";
 
-const SingleTask = ({
-  task,
-  isDragging,
-  isEditing,
-  editingTaskId,
-  setEditingTaskId,
-}) => {
+const SingleTask = ({ task, isDragging, isEditing, setEditingTaskId }) => {
   const [editedTask, setEditedTask] = useState(task);
   const { title, description, timestamp, status, _id } = task;
   const { user } = useAuth();
@@ -43,7 +37,8 @@ const SingleTask = ({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.7 : 1,
+    scale: isDragging ? 0.9 : 1,
   };
   // save task edited data
   const handleSave = () => {

@@ -91,11 +91,9 @@ const TasksContainer = () => {
 
     const activeId = active.id;
     const overId = over.id;
-    // DEBUG: issue here!!
-    //  const activeStatus = findTaskContainer(activeId);
+
     const activeStatus = activeTask.status;
     const overStatus = findTaskContainer(overId) || over.id;
-    // console.log(activeStatus);
 
     if (activeStatus !== overStatus) {
       socket.emit("updateTaskStatus", {
@@ -135,31 +133,38 @@ const TasksContainer = () => {
 
   return (
     <main className="overflow-hidden flex-1 p-3 rounded-md h-full lg:flex flex-col mt-10 mb-5">
-      <div className="flex justify-between items-center mb-5">
-        <h1 className="font-bold text-3xl lg:text-4xl">Manage your tasks</h1>
-        <Button onClick={() => setIsAddModalOpen(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add Task
-        </Button>
-      </div>
       {user?.email ? (
-        <DndContext
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-          collisionDetection={closestCorners}
-        >
-          <div className="lg:flex-1 lg:flex gap-5 overflow-hidden h-full">
-            <ToDoTasks tasks={tasks.todo} />
-            <InProgressTasks tasks={tasks["in-progress"]} />
-            <FinishedTasks tasks={tasks.finished} />
-            <DragOverlay>
-              {activeTask ? <SingleTask task={activeTask} isDragging /> : null}
-            </DragOverlay>
+        <>
+          <div className="flex justify-between items-center mb-5">
+            <h1 className="font-bold text-3xl lg:text-4xl">
+              Manage your tasks
+            </h1>
+            <Button onClick={() => setIsAddModalOpen(true)}>
+              <PlusCircle className="mr-2 h-4 w-4" /> Add Task
+            </Button>
           </div>
-        </DndContext>
+
+          <DndContext
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+            collisionDetection={closestCorners}
+          >
+            <div className="lg:flex-1 lg:flex gap-5 overflow-hidden h-full">
+              <ToDoTasks tasks={tasks.todo} />
+              <InProgressTasks tasks={tasks["in-progress"]} />
+              <FinishedTasks tasks={tasks.finished} />
+              <DragOverlay>
+                {activeTask ? (
+                  <SingleTask task={activeTask} isDragging />
+                ) : null}
+              </DragOverlay>
+            </div>
+          </DndContext>
+        </>
       ) : (
         <p className="text-red-500 text-center mt-10 font-bold">
-          Please login to use the app and save your data
+          Please login to use the app and save your data as well
         </p>
       )}
       <AddTaskModal
